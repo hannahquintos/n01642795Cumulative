@@ -1,0 +1,27 @@
+﻿@model n01642795Cumulative1.Models.ViewModels.ShowTeacher
+@{
+    ViewBag.Title = "Show";
+}
+
+<!--A view which uses server rendering to display a teacher from the MySQL Database-->
+
+<nav>
+    <a href="/Teacher/List">Teachers</a>
+    <a href="/Course/List">Classes</a>
+    <a href="/Student/List">Students</a>
+</nav>
+
+<h2>@Model.Teacher.TeacherFname @Model.Teacher.TeacherLname</h2>
+
+<h3>@Model.Teacher.EmployeeNumber</h3>
+
+<p>Hire Date: @Model.Teacher.HireDate</p>
+<p>Salary: $@Model.Teacher.Salary</p>
+
+<h3>Teaches:</h3>
+<ul>
+    @foreach (var course in @Model.CoursesTaught)
+    {
+        <li><a href="/Course/Show/@course.ClassId">@course.ClassName</a></li>
+    }
+</ul>

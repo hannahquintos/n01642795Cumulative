@@ -1,0 +1,31 @@
+﻿@model n01642795Cumulative1.Models.ViewModels.ShowCourse
+@{
+    ViewBag.Title = "Show";
+}
+
+<!--A view which uses server rendering to display a course from the MySQL Database-->
+
+<nav>
+    <a href="/Teacher/List">Teachers</a>
+    <a href="/Course/List">Classes</a>
+    <a href="/Student/List">Students</a>
+</nav>
+
+<h2>@Model.Course.ClassName</h2>
+
+<h3>@Model.Course.ClassCode</h3>
+
+<p>Start Date: @Model.Course.StartDate</p>
+<p>Finish Date: @Model.Course.FinishDate</p>
+
+@*logic so that the students heading only appears if there are students enrolled in the class*@
+@if (@Model.StudentsEnrolled.Any() )
+{
+    <h3>Students:</h3>
+    <ul>
+        @foreach (var student in @Model.StudentsEnrolled)
+        {
+            <li><a href="/Student/Show/@student.StudentId">@student.StudentFname @student.StudentLname</a></li>
+        }
+    </ul>
+}

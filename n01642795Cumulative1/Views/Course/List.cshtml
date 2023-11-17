@@ -1,0 +1,34 @@
+﻿@model IEnumerable<n01642795Cumulative1.Models.Course>
+@{
+    ViewBag.Title = "List";
+}
+
+<!--A view which uses server rendering to display classes from the MySQL Database-->
+
+<nav>
+    <a href="/Teacher/List">Teachers</a>
+    <a href="/Course/List">Classes</a>
+    <a href="/Student/List">Students</a>
+</nav>
+
+<h2>Classes</h2>
+
+<!--search bar-->
+<form action="/Course/List" method="GET">
+    <input type="text" name="SearchKey" />
+    <input type="submit" value="Search" />
+</form>
+
+@foreach (var course in Model)
+{
+    <div>
+        <div>
+            <!--dynamic url to route to specific teacher page-->
+            <a class="cardName" href="/Course/Show/@course.ClassId">
+                <!--class name as hyperlink-->
+                @course.ClassCode: @course.ClassName
+            </a>
+        </div>
+        
+    </div>
+}
