@@ -209,8 +209,9 @@ namespace n01642795Cumulative1.Controllers
         public void AddTeacher([FromBody]Teacher NewTeacher) // added [FromBody] to make sure AddTeacher method is supported by Web API
         {
             // server side validation - ensure there is no missing information before adding to the database
+            string hireDateExpression = @"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"; // regex expression to check if hire date is in datetime format
             string salaryExpression = @"^-?\d+(\.\d+)?$"; // regex expression to check if input salary is in decimal format
-            if (NewTeacher.TeacherFname == "" || NewTeacher.TeacherLname == "" || NewTeacher.EmployeeNumber == "" || NewTeacher.HireDate == "" || Regex.IsMatch(NewTeacher.Salary.ToString(), salaryExpression) == false) return;
+            if (NewTeacher.TeacherFname == "" || NewTeacher.TeacherLname == "" || NewTeacher.EmployeeNumber == "" || Regex.IsMatch(NewTeacher.HireDate, hireDateExpression) == false || Regex.IsMatch(NewTeacher.Salary.ToString(), salaryExpression) == false) return;
 
             // create a connection
             MySqlConnection Conn = SchoolDbContext.AccessDatabase();

@@ -16,11 +16,14 @@
         var HireDate = document.getElementById("HireDate").value;
         var Salary = document.getElementById("Salary").value;
 
+        // regex expression to check if hire date is in datetime format
+        var hireDateExpression = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+
         // regex expression to check if input salary is in decimal format
         var salaryExpression = /^\d+(\.\d+)?$/;
 
         // check that data is valid
-        if (TeacherFname === "" || TeacherLname === "" || EmployeeNumber === "" || HireDate === "" || !salaryExpression.test(Salary)) {
+        if (TeacherFname === "" || TeacherLname === "" || EmployeeNumber === "" || !hireDateExpression.test(HireDate) || !salaryExpression.test(Salary)) {
             alert("Invalid Data");
             return false; // don't submit if data is invalid
         }
