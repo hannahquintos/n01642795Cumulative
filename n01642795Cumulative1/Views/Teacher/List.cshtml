@@ -13,10 +13,12 @@
 
 <h2>Teachers</h2>
 
+<a href="/Teacher/New">Add Teacher</a>
+
 <!--search bar-->
 <form action="/Teacher/List" method="GET">
-    <input type="text" name="SearchKey"/>
-    <input type="submit" value="Search"/>
+    <input type="text" name="SearchKey" />
+    <input type="submit" value="Search" />
 </form>
 
 @foreach (var teacher in Model)

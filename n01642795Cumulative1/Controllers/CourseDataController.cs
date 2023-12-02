@@ -119,7 +119,10 @@ namespace n01642795Cumulative1.Controllers
 
             // SQL query
             // get the class that has a matching classid to the input id
-            cmd.CommandText = "Select * from Classes where classid = " + id;
+            cmd.CommandText = "Select * from Classes where classid = @id";
+
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             // get result set of query
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -142,6 +145,9 @@ namespace n01642795Cumulative1.Controllers
                 NewCourse.FinishDate = FinishDate.ToString("D");
                 NewCourse.ClassName = ClassName;
             }
+
+            // close connection
+            Conn.Close();
 
             // return a single course object
             return NewCourse;
@@ -174,7 +180,10 @@ namespace n01642795Cumulative1.Controllers
 
             // SQL query
             // get the classes with a teacherid that matches the input id
-            cmd.CommandText = "Select * from Classes where teacherid = " + id;
+            cmd.CommandText = "Select * from Classes where teacherid = @id";
+
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             // get result set of query
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -203,6 +212,9 @@ namespace n01642795Cumulative1.Controllers
                 // add this new course to list of courses
                 Courses.Add(NewCourse);
             }
+
+            // close connection
+            Conn.Close();
 
             // return list of Course objects
             return Courses;

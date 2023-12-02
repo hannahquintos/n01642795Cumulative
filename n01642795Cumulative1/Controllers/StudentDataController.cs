@@ -116,7 +116,10 @@ namespace n01642795Cumulative1.Controllers
 
             // SQL query
             // get the student that has a matching studentid to the input id
-            cmd.CommandText = "Select * from Students where studentid = " + id;
+            cmd.CommandText = "Select * from Students where studentid = @id";
+
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             // get result set of query
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -137,6 +140,9 @@ namespace n01642795Cumulative1.Controllers
                 NewStudent.StudentNumber = StudentNumber;
                 NewStudent.EnrolDate = EnrolDate.ToString("D");
             }
+
+            // close connection
+            Conn.Close();
 
             // return a single student object
             return NewStudent;
@@ -169,7 +175,10 @@ namespace n01642795Cumulative1.Controllers
 
             // SQL query
             // get students with a classid that matches the input id
-            cmd.CommandText = "SELECT * FROM students JOIN studentsxclasses ON students.studentid = studentsxclasses.studentid JOIN classes ON studentsxclasses.classid = classes.classid WHERE classes.classid = " + id;
+            cmd.CommandText = "SELECT * FROM students JOIN studentsxclasses ON students.studentid = studentsxclasses.studentid JOIN classes ON studentsxclasses.classid = classes.classid WHERE classes.classid = @id";
+
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             // get result set of query
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -196,6 +205,9 @@ namespace n01642795Cumulative1.Controllers
                 // add this new Student to list of students
                 Students.Add(NewStudent);
             }
+
+            // close connection
+            Conn.Close();
 
             // return list of Student objects
             return Students;

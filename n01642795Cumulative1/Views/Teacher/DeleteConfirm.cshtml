@@ -1,0 +1,21 @@
+﻿@model n01642795Cumulative1.Models.Teacher
+
+@{
+    ViewBag.Title = "DeleteConfirm";
+}
+
+<!--A view which allows users to confirm their choice to delete a teacher from the database-->
+
+<nav>
+    <a href="/Teacher/List">Teachers</a>
+    <a href="/Course/List">Classes</a>
+    <a href="/Student/List">Students</a>
+</nav>
+
+<h2>Are you sure you want to delete @Model.TeacherFname @Model.TeacherLname?</h2>
+
+<a href="/Teacher/Show/@Model.TeacherId">Cancel</a>
+
+<form method="POST" action="/Teacher/Delete/@Model.TeacherId">
+    <button style="background-color: red; color: white;">Confirm Delete</button>
+</form>

@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "New";
+}
+
+<!--A view which allows users to enter information to create a new teacher in the database-->
+
+<!--client side validation - ensure user doesn't submit a form with invalid or missing information-->
+<!--using javascript to validate input text-->
+<script>
+    function validateForm() {
+        // get html form elements
+        var TeacherFname = document.getElementById("TeacherFname").value;
+        var TeacherLname = document.getElementById("TeacherLname").value;
+        var EmployeeNumber = document.getElementById("EmployeeNumber").value;
+        var HireDate = document.getElementById("HireDate").value;
+        var Salary = document.getElementById("Salary").value;
+
+        // regex expression to check if input salary is in decimal format
+        var salaryExpression = /^\d+(\.\d+)?$/;
+
+        // check that data is valid
+        if (TeacherFname === "" || TeacherLname === "" || EmployeeNumber === "" || HireDate === "" || !salaryExpression.test(Salary)) {
+            alert("Invalid Data");
+            return false; // don't submit if data is invalid
+        }
+        return true;
+    }
+</script>
+
+<nav>
+    <a href="/Teacher/List">Teachers</a>
+    <a href="/Course/List">Classes</a>
+    <a href="/Student/List">Students</a>
+</nav>
+
+<h2>New Teacher</h2>
+
+<!--call function to validate form when submitted-->
+<form onsubmit="return validateForm()" method="POST" action="/Teacher/Create">
+    <div>
+        <label for="TeacherFname">First name:</label>
+        <input type="text" id="TeacherFname" name="TeacherFname" />
+    </div>
+
+    <div>
+        <label for="TeacherLname">Last name:</label>
+        <input type="text" id="TeacherLname" name="TeacherLname" />
+    </div>
+
+    <div>
+        <label for="EmployeeNumber">Employee number:</label>
+        <input type="text" id="EmployeeNumber" name="EmployeeNumber" />
+    </div>
+
+    <div>
+        <label for="HireDate">Hire date:</label>
+        <input type="text" id="HireDate" name="HireDate" />
+    </div>
+
+    <div>
+        <label for="Salary">Salary:</label>
+        <input type="text" id="Salary" name="Salary" />
+
+    </div>
+    <div>
+        <input type="submit" value="Create teacher" />
+    </div>
+</form>

@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Google.Protobuf.WellKnownTypes;
+using MySql.Data.MySqlClient;
 using n01642795Cumulative1.Models;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Text.RegularExpressions;
 
 namespace n01642795Cumulative1.Controllers
 {
@@ -118,7 +120,10 @@ namespace n01642795Cumulative1.Controllers
 
             // SQL query
             // get the teacher that has a matching teacherid to the input id
-            cmd.CommandText = "Select * from Teachers where teacherid = " + id;
+            cmd.CommandText = "Select * from Teachers where teacherid = @id";
+
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             // get result set of query
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -142,8 +147,97 @@ namespace n01642795Cumulative1.Controllers
                 NewTeacher.Salary = Salary;
             }
 
+            // close connection
+            Conn.Close();
+
             // return a single teacher object
             return NewTeacher;
+        }
+
+        /// <summary>
+        ///     Recieves a teacher id and deletes the corresponding teacher from the database. Maintains refential integrity by also deleting any classes pointing to the teacher.
+        /// </summary>
+        /// <param name="id"> The teacher id (as an integer) </param>
+        /// <example>
+        ///     POST: /api/TeacherData/DeleteTeacher/2
+        /// </example>
+
+        [HttpPost]
+        public void DeleteTeacher(int id)
+        {
+            // create a connection
+            MySqlConnection Conn = SchoolDbContext.AccessDatabase();
+
+            // open connection
+            Conn.Open();
+
+            // to maintain referential integrity - delete query for classes pointing to teacher being deleted
+            // create command/query
+            MySqlCommand cmd1 = Conn.CreateCommand();
+
+            // SQL query
+            cmd1.CommandText = "Delete from classes where teacherid=@id";
+            cmd1.Parameters.AddWithValue("@id", id);
+            cmd1.Prepare();
+
+            // execute non select query
+            cmd1.ExecuteNonQuery();
+
+            // create command/query
+            MySqlCommand cmd2 = Conn.CreateCommand();
+
+            // SQL query
+            cmd2.CommandText = "Delete from teachers where teacherid=@id";
+            cmd2.Parameters.AddWithValue("@id", id);
+            cmd2.Prepare();
+
+            // execute non select query
+            cmd2.ExecuteNonQuery();
+
+            // close connection
+            Conn.Close();
+        }
+
+        /// <summary>
+        ///     Adds a new teacher to the database.
+        /// </summary>
+        /// <param name="NewTeacher"> The teacher object with properties that match coloumns of teacher table in the database </param>
+        /// <example>
+        ///    POST: /api/TeacherData/AddTeacher
+        /// </example>
+        [HttpPost]
+        public void AddTeacher([FromBody]Teacher NewTeacher) // added [FromBody] to make sure AddTeacher method is supported by Web API
+        {
+            // server side validation - ensure there is no missing information before adding to the database
+            string salaryExpression = @"^-?\d+(\.\d+)?$"; // regex expression to check if input salary is in decimal format
+            if (NewTeacher.TeacherFname == "" || NewTeacher.TeacherLname == "" || NewTeacher.EmployeeNumber == "" || NewTeacher.HireDate == "" || Regex.IsMatch(NewTeacher.Salary.ToString(), salaryExpression) == false) return;
+
+            // create a connection
+            MySqlConnection Conn = SchoolDbContext.AccessDatabase();
+
+            // open connection
+            Conn.Open();
+
+            // create command/query
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            // SQL query
+            cmd.CommandText = "Insert into teachers (teacherfname, teacherlname, employeenumber, hiredate, salary) values (@TeacherFname, @TeacherLname, @EmployeeNumber, @HireDate, @Salary)";
+            
+            cmd.Parameters.AddWithValue("@TeacherFname", NewTeacher.TeacherFname);
+            cmd.Parameters.AddWithValue("@TeacherLname", NewTeacher.TeacherLname);
+            cmd.Parameters.AddWithValue("@EmployeeNumber", NewTeacher.EmployeeNumber);
+            cmd.Parameters.AddWithValue("@HireDate", NewTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@Salary", NewTeacher.Salary);
+
+            cmd.Prepare();
+
+            // execute non select query
+            cmd.ExecuteNonQuery();
+
+            // close connection
+            Conn.Close();
+
         }
 
     }
