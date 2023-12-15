@@ -12,3 +12,9 @@ A repo to store cumulative 2 for HTTP 5112
 - Used Javascript client side validation for when the form to create a teacher is submitted
 - Maintain referential integrity by making sure courses are no longer pointing to a teacher which doesn't exist
 - Created sequence diagrams to describe the server-render cycles which happen when a teacher is added or removed
+
+A repo to store cumulative 3 for HTTP 5112
+- Built 'Update' functionality for teachers
+- Used C# server side validation for when a teacher is updated
+- Used Javascript client side validation for when the form to edit a teacher is submitted
+- Created sequence diagram to describe the server-render cycles which happen when a teacher is updated
