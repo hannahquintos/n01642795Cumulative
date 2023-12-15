@@ -108,8 +108,6 @@ namespace n01642795Cumulative1.Controllers
         /// <summary>
         ///     Routes to Views/Teacher/Edit.cshtml
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         public ActionResult Edit(int id)
         {
             ShowTeacher ViewModel = new ShowTeacher();
@@ -125,15 +123,8 @@ namespace n01642795Cumulative1.Controllers
 
         // POST: /Teacher/Update/{id}
         /// <summary>
-        ///     Actually updates the teacher. Then, redirects to Views/Teacher/Show.cshtml
+        ///     Updates the teacher. Then, redirects to Views/Teacher/Show.cshtml
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="TeacherFname"></param>
-        /// <param name="TeacherLname"></param>
-        /// <param name="EmployeeNumber"></param>
-        /// <param name="HireDate"></param>
-        /// <param name="Salary"></param>
-        /// <returns></returns>
         [HttpPost]
         public ActionResult Update(int id, string TeacherFname, string TeacherLname, string EmployeeNumber, string HireDate, string Salary)
         {
