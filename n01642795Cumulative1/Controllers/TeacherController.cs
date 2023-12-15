@@ -103,5 +103,57 @@ namespace n01642795Cumulative1.Controllers
 
             return RedirectToAction("List");
         }
+
+        // GET: /Teacher/Edit/{id}
+        /// <summary>
+        ///     Routes to Views/Teacher/Edit.cshtml
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Edit(int id)
+        {
+            ShowTeacher ViewModel = new ShowTeacher();
+            TeacherDataController TeacherDataController = new TeacherDataController();
+            CourseDataController CourseDataController = new CourseDataController();
+            Teacher SelectedTeacher = TeacherDataController.FindTeacher(id);
+            IEnumerable<Course> CoursesTaught = CourseDataController.GetCoursesTaughtByTeacher(id);
+            ViewModel.Teacher = SelectedTeacher;
+            ViewModel.CoursesTaught = CoursesTaught;
+
+            return View(ViewModel);
+        }
+
+        // POST: /Teacher/Update/{id}
+        /// <summary>
+        ///     Actually updates the teacher. Then, redirects to Views/Teacher/Show.cshtml
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="TeacherFname"></param>
+        /// <param name="TeacherLname"></param>
+        /// <param name="EmployeeNumber"></param>
+        /// <param name="HireDate"></param>
+        /// <param name="Salary"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Update(int id, string TeacherFname, string TeacherLname, string EmployeeNumber, string HireDate, string Salary)
+        {
+            // create new teacher object
+            Teacher UpdatedTeacher = new Teacher();
+
+            // set properties of new teacher object to the parameter values of the form inputs
+            UpdatedTeacher.TeacherFname = TeacherFname;
+            UpdatedTeacher.TeacherLname = TeacherLname;
+            UpdatedTeacher.EmployeeNumber = EmployeeNumber;
+            UpdatedTeacher.HireDate = HireDate;
+            UpdatedTeacher.Salary = Convert.ToDecimal(Salary);
+
+            // create new instance of TeacherDataController to access database
+            TeacherDataController controller = new TeacherDataController();
+
+            // add teacher to the database
+            controller.UpdateTeacher(id, UpdatedTeacher);
+
+            return RedirectToAction("Show/" + id);
+        }
     }
 }

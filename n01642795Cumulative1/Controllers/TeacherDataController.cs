@@ -78,7 +78,7 @@ namespace n01642795Cumulative1.Controllers
                 NewTeacher.TeacherFname = TeacherFname;
                 NewTeacher.TeacherLname = TeacherLname;
                 NewTeacher.EmployeeNumber = EmployeeNumber;
-                NewTeacher.HireDate = HireDate.ToString("D"); // converted date to long date format
+                NewTeacher.HireDate = HireDate.ToString("yyyy/dd/MM HH:mm:ss");
                 NewTeacher.Salary = Salary;
 
                 // add this new teacher to list of teachers
@@ -143,7 +143,7 @@ namespace n01642795Cumulative1.Controllers
                 NewTeacher.TeacherFname = TeacherFname;
                 NewTeacher.TeacherLname = TeacherLname;
                 NewTeacher.EmployeeNumber = EmployeeNumber;
-                NewTeacher.HireDate = HireDate.ToString("D");
+                NewTeacher.HireDate = HireDate.ToString("yyyy/dd/MM HH:mm:ss");
                 NewTeacher.Salary = Salary;
             }
 
@@ -176,7 +176,7 @@ namespace n01642795Cumulative1.Controllers
             MySqlCommand cmd1 = Conn.CreateCommand();
 
             // SQL query
-            cmd1.CommandText = "Delete from classes where teacherid=@id";
+            cmd1.CommandText = "Update classes set teacherid = null where teacherid=@id";
             cmd1.Parameters.AddWithValue("@id", id);
             cmd1.Prepare();
 
@@ -210,8 +210,7 @@ namespace n01642795Cumulative1.Controllers
         {
             // server side validation - ensure there is no missing information before adding to the database
             string hireDateExpression = @"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"; // regex expression to check if hire date is in datetime format
-            string salaryExpression = @"^-?\d+(\.\d+)?$"; // regex expression to check if input salary is in decimal format
-            if (NewTeacher.TeacherFname == "" || NewTeacher.TeacherLname == "" || NewTeacher.EmployeeNumber == "" || Regex.IsMatch(NewTeacher.HireDate, hireDateExpression) == false || Regex.IsMatch(NewTeacher.Salary.ToString(), salaryExpression) == false) return;
+            if (NewTeacher.TeacherFname == "" || NewTeacher.TeacherLname == "" || NewTeacher.EmployeeNumber == "" || Regex.IsMatch(NewTeacher.HireDate, hireDateExpression) == false || float.TryParse(NewTeacher.Salary.ToString(), out float result) == false) return;
 
             // create a connection
             MySqlConnection Conn = SchoolDbContext.AccessDatabase();
@@ -240,6 +239,50 @@ namespace n01642795Cumulative1.Controllers
             Conn.Close();
 
         }
+
+        /// <summary>
+        ///     Updates the teacher in the database with the new information recieved
+        /// </summary>
+        /// <param name="id">The teacherid of the teacher to be updated</param>
+        /// <param name="UpdatedTeacher"> The updated teacher with it's properties (teacher's first name, last name, employee number, hire date, and salary)</param>
+        /// <example>
+        ///     POST api/TeacherData/UpdateTeacher/2
+        /// </example>
+        [HttpPost]
+        public void UpdateTeacher(int id, [FromBody]Teacher UpdatedTeacher)
+        {
+            // server side validation - ensure there is no missing information before adding to the database
+            string hireDateExpression = @"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"; // regex expression to check if hire date is in datetime format
+            if (UpdatedTeacher.TeacherFname == "" || UpdatedTeacher.TeacherLname == "" || UpdatedTeacher.EmployeeNumber == "" || Regex.IsMatch(UpdatedTeacher.HireDate, hireDateExpression) == false || float.TryParse(UpdatedTeacher.Salary.ToString(), out float result) == false) return;
+
+            // create a connection
+            MySqlConnection Conn = SchoolDbContext.AccessDatabase();
+
+            // open connection
+            Conn.Open();
+
+            // create command/query
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            // SQL query
+            cmd.CommandText = "update teachers set teacherfname=@TeacherFname, teacherlname=@TeacherLname, employeenumber=@EmployeeNumber, hiredate=@HireDate, salary=@Salary where teacherid = @TeacherId";
+
+            cmd.Parameters.AddWithValue("@TeacherFname", UpdatedTeacher.TeacherFname);
+            cmd.Parameters.AddWithValue("@TeacherLname", UpdatedTeacher.TeacherLname);
+            cmd.Parameters.AddWithValue("@EmployeeNumber", UpdatedTeacher.EmployeeNumber);
+            cmd.Parameters.AddWithValue("@HireDate", UpdatedTeacher.HireDate);
+            cmd.Parameters.AddWithValue("@Salary", UpdatedTeacher.Salary);
+            cmd.Parameters.AddWithValue("@TeacherId", id);
+
+            cmd.Prepare();
+
+            // execute non select query
+            cmd.ExecuteNonQuery();
+
+            // close connection
+            Conn.Close();
+
+        } 
 
     }
 
