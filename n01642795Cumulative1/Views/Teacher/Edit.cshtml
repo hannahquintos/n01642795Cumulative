@@ -3,7 +3,7 @@
     ViewBag.Title = "Update";
 }
 
-<!--A view which allows users to enter information to create a new teacher in the database-->
+<!--A view which uses server rendering to display a teacher from the database and allows users to make changes to the teacher information-->
 <!--client side validation - ensure user doesn't submit a form with invalid or missing information-->
 <!--using javascript to validate input text-->
 <script>
@@ -85,31 +85,37 @@
 <form onsubmit="return validateTeacherForm()" method="POST" action="/Teacher/Update/@Model.Teacher.TeacherId">
     <div>
         <label for="TeacherFname">First name:</label>
-        <input type="text" id="TeacherFname" name="TeacherFname" value="@Model.Teacher.TeacherFname"/>
+        <input type="text" id="TeacherFname" name="TeacherFname" value="@Model.Teacher.TeacherFname" />
     </div>
 
     <div>
         <label for="TeacherLname">Last name:</label>
-        <input type="text" id="TeacherLname" name="TeacherLname" value="@Model.Teacher.TeacherLname"/>
+        <input type="text" id="TeacherLname" name="TeacherLname" value="@Model.Teacher.TeacherLname" />
     </div>
 
     <div>
         <label for="EmployeeNumber">Employee number:</label>
-        <input type="text" id="EmployeeNumber" name="EmployeeNumber" value="@Model.Teacher.EmployeeNumber"/>
+        <input type="text" id="EmployeeNumber" name="EmployeeNumber" value="@Model.Teacher.EmployeeNumber" />
     </div>
 
     <div>
         <label for="HireDate">Hire date:</label>
-        <input type="text" id="HireDate" name="HireDate" value="@Model.Teacher.HireDate"/>
+        <input type="text" id="HireDate" name="HireDate" value="@Model.Teacher.HireDate" />
     </div>
 
     <div>
         <label for="Salary">Salary:</label>
-        <input type="text" id="Salary" name="Salary" value="@Model.Teacher.Salary"/>
+        <input type="text" id="Salary" name="Salary" value="@Model.Teacher.Salary" />
 
     </div>
     <div>
         <input type="submit" value="Update teacher" />
     </div>
 </form>
+<!-- error messages -->
+<p id="FnameError" style="display:none; color: red;">Please enter a first name.</p>
+<p id="LnameError" style="display:none; color: red;">Please enter a last name.</p>
+<p id="EmployeeNumberError" style="display:none; color: red;">Please enter an employee number.</p>
+<p id="HireDateError" style="display:none; color: red;">Please enter a valid hire date.</p>
+<p id="SalaryError" style="display:none; color: red;">Please enter a valid salary.</p>
 

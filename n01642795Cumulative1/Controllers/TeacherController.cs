@@ -105,9 +105,6 @@ namespace n01642795Cumulative1.Controllers
         }
 
         // GET: /Teacher/Edit/{id}
-        /// <summary>
-        ///     Routes to Views/Teacher/Edit.cshtml
-        /// </summary>
         public ActionResult Edit(int id)
         {
             ShowTeacher ViewModel = new ShowTeacher();
